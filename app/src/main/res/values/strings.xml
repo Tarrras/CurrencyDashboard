@@ -12,11 +12,13 @@
     <string name="no_currencies_added">No currencies added yet</string>
     <string name="tap_to_add_currencies">Tap the + button to add currencies</string>
     <string name="failed_to_refresh_rates">Failed to refresh rates</string>
+    <string name="auto_refresh">Auto</string>
     
     <!-- Add Asset Screen -->
     <string name="back">Back</string>
     <string name="search_assets">Search assets</string>
     <string name="clear">Clear</string>
+    <string name="popular_assets">POPULAR ASSETS</string>
     <string name="no_assets_available">No assets available</string>
     <string name="no_assets_found_for">No assets found for \'%1$s\'</string>
     <string name="failed_to_update_asset">Failed to update asset</string>
@@ -26,7 +28,7 @@
     <string name="no_value">—</string>
     <string name="positive_change_format">+%.2f%%</string>
     <string name="negative_change_format">%.2f%%</string>
-    <string name="zero_change">0.00%</string>
+    <string name="zero_change">0.00%%</string>
     
     <!-- Error Messages -->
     <string name="api_call_not_successful">API call was not successful</string>

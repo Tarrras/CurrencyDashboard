@@ -6,15 +6,18 @@ import com.example.currencydashboard.R
 import com.example.currencydashboard.domain.model.Asset
 import com.example.currencydashboard.domain.usecase.GetRatesUseCase
 import com.example.currencydashboard.presentation.common.UiError
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import java.io.IOException
+import kotlin.time.Duration.Companion.seconds
 
 class HomeViewModel(
     private val getRatesUseCase: GetRatesUseCase
@@ -23,12 +26,24 @@ class HomeViewModel(
     private val _state = MutableStateFlow(HomeState())
     val state: StateFlow<HomeState> = _state.asStateFlow()
 
+    private val refreshInterval = 3.seconds
+
     val assetsFlow = getRatesUseCase.getEnabledAssetsFlow().onEach { assets ->
         _state.update { it.copy(assets = assets) }
     }.launchIn(viewModelScope)
 
     val lastUpdatedFlow = getRatesUseCase.getLastRefreshTimestampFlow().onEach { timestamp ->
         _state.update { it.copy(lastUpdated = timestamp) }
+    }.launchIn(viewModelScope)
+
+    // Auto-refresh flow that triggers refresh at regular intervals
+    private val autoRefreshFlow = flow {
+        while (currentCoroutineContext().isActive) {
+            emit(Unit)
+            delay(refreshInterval)
+        }
+    }.onEach {
+        refreshRates()
     }.launchIn(viewModelScope)
     
     init {
@@ -38,6 +53,9 @@ class HomeViewModel(
             
             // Set the current base currency in the state
             _state.update { it.copy(baseCurrency = getRatesUseCase.getBaseCurrency()) }
+
+            // Initial refresh
+            refreshRates()
         }
     }
     

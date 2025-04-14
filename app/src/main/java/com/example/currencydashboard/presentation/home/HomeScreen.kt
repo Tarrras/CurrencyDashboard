@@ -1,7 +1,6 @@
 package com.example.currencydashboard.presentation.home
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -21,7 +20,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Card
@@ -36,15 +34,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -54,15 +47,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.currencydashboard.R
 import com.example.currencydashboard.domain.model.Asset
-import com.example.currencydashboard.presentation.common.UiError
 import com.example.currencydashboard.presentation.common.toUiText
-import com.example.currencydashboard.utils.formatChange
 import com.example.currencydashboard.utils.formatRate
 import com.example.currencydashboard.utils.formatTimestamp
 import com.example.currencydashboard.utils.getCurrencySymbol
-import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
-import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,15 +61,6 @@ fun HomeScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    
-    // Launch automatic refresh every 3 seconds
-    LaunchedEffect(key1 = true) {
-        /*while (true) {
-            viewModel.handleIntent(HomeIntent.RefreshRates)
-            delay(3.seconds)
-        }*/
-        viewModel.handleIntent(HomeIntent.RefreshRates)
-    }
     
     Scaffold(
         topBar = {
