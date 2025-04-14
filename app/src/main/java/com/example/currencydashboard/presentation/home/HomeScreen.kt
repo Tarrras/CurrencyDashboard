@@ -27,6 +27,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -61,11 +62,11 @@ fun HomeScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { 
+                title = {
                     Text(
                         text = stringResource(R.string.exchange_rates),
                         style = MaterialTheme.typography.headlineMedium
@@ -81,7 +82,10 @@ fun HomeScreen(
                         )
                     } else {
                         IconButton(onClick = { viewModel.handleIntent(HomeIntent.RefreshRates) }) {
-                            Icon(Icons.Default.Refresh, contentDescription = stringResource(R.string.refresh))
+                            Icon(
+                                Icons.Default.Refresh,
+                                contentDescription = stringResource(R.string.refresh)
+                            )
                         }
                     }
                 }
@@ -98,27 +102,52 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            Text(
-                text = stringResource(R.string.last_updated, formatTimestamp(state.lastUpdated, context)),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 4.dp),
-                textAlign = TextAlign.End
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Base currency indicator
+                Text(
+                    text = stringResource(R.string.base_currency, state.baseCurrency),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
+                )
+
+                // Last updated info
+                Text(
+                    text = stringResource(
+                        R.string.last_updated,
+                        formatTimestamp(state.lastUpdated, context)
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                color = MaterialTheme.colorScheme.outlineVariant
             )
-            
+
             if (state.assets.isEmpty()) {
                 EmptyState(Modifier.weight(1f))
             } else {
                 AssetList(
                     assets = state.assets,
+                    baseCurrency = state.baseCurrency,
                     modifier = Modifier.weight(1f)
                 )
             }
-            
+
             if (state.error != null) {
-                ErrorBanner(errorMessage = state.error?.toUiText() ?: stringResource(R.string.failed_to_refresh_rates))
+                ErrorBanner(
+                    errorMessage = state.error?.toUiText()
+                        ?: stringResource(R.string.failed_to_refresh_rates)
+                )
             }
         }
     }
@@ -127,6 +156,7 @@ fun HomeScreen(
 @Composable
 fun AssetList(
     assets: List<Asset>,
+    baseCurrency: String,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -136,59 +166,78 @@ fun AssetList(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item { Spacer(modifier = Modifier.height(8.dp)) }
-        
+
         items(assets, key = { it.code }) { asset ->
-            AssetCard(asset = asset)
+            AssetCard(asset = asset, baseCurrency = baseCurrency)
         }
-        
+
         item { Spacer(modifier = Modifier.height(80.dp)) }
     }
 }
 
 @Composable
-fun AssetCard(asset: Asset) {
+fun AssetCard(asset: Asset, baseCurrency: String) {
     val context = LocalContext.current
 
-    
     Card(
         modifier = Modifier
             .fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor =  MaterialTheme.colorScheme.surface)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(16.dp)
         ) {
-            // Currency icon (circle with currency symbol)
-            AssetIcon(asset.code)
-            
-            // Currency info
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 16.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = asset.code,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = asset.name,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            
-            // Rate and change
-            Column(horizontalAlignment = Alignment.End) {
+                // Currency icon (circle with currency symbol)
+                AssetIcon(asset.code)
+
+                // Currency info
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 16.dp)
+                ) {
+                    Text(
+                        text = asset.code,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = asset.name,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                // Rate
                 Text(
                     text = formatRate(asset.rate, context),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
+                )
+            }
+
+            if (asset.code != baseCurrency) {
+                // Exchange rate explanation
+                Text(
+                    text = stringResource(
+                        R.string.exchange_rate_description,
+                        baseCurrency,
+                        formatRate(asset.rate, context),
+                        asset.code
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    textAlign = TextAlign.End
                 )
             }
         }

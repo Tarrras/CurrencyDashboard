@@ -6,20 +6,20 @@ view up-to-date information.
 
 ## Features
 
-- Track real-time exchange rates for multiple currencies
+- Track real-time exchange rates for multiple currencies (with USD as base currency)
 - Customize your currency watchlist
 - Search and filter available currencies
 - Clean, modern UI built with Jetpack Compose
 - Offline support with local caching
+- Auto-refresh functionality using Kotlin Flow
 
 ## Screenshots
 
 ### Main Screen
-
 ![Home Screen](screenshots/home_screen.png)
 
-The home screen displays the current exchange rates with auto-refresh functionality implemented
-using Kotlin Flow:
+The home screen displays the current exchange rates with USD as the base currency. Each card shows
+the exchange rate (e.g., 1 USD = 0.85 EUR) and auto-refreshes every 3 seconds using Kotlin Flow:
 
 ```kotlin
 // Auto-refresh flow implementation in HomeViewModel
@@ -76,21 +76,19 @@ Note: The `api.properties` file is excluded from version control to keep API cre
 ## Setup Instructions
 
 ### Prerequisites
-
 - Android Studio Giraffe (2023.2.1) or newer
 - JDK 11
 - Kotlin 1.9 or newer
 
 ### Build and Run
-
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/CurrencyDashboard.git
    ```
 
 2. Set up API credentials:
-    - Copy `api.properties.sample` to `api.properties`
-    - Add your API key from exchangerate.host
+   - Copy `api.properties.sample` to `api.properties`
+   - Add your API key from exchangerate.host
 
 3. Open the project in Android Studio
 
@@ -115,9 +113,10 @@ The application follows Clean Architecture principles and MVVM pattern:
 
 ## Assumptions Made
 
-1. **Base Currency**: USD is used as the default base currency for exchange rates.
-2. **Update Frequency**: Exchange rates don't need to be updated more frequently than once per
-   manual refresh by the user.
+1. **Base Currency**: USD is used as the default base currency for exchange rates. The UI clearly
+   indicates this to users.
+2. **Update Frequency**: Exchange rates are automatically refreshed every 3 seconds to provide
+   real-time data.
 3. **Network Connectivity**: The app handles both online and offline scenarios, providing cached
    data when offline.
 4. **Rate Limit**: The free API tier provides not sufficient requests (100) for normal app usage.

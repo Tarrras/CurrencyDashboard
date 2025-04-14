@@ -13,6 +13,8 @@
     <string name="tap_to_add_currencies">Tap the + button to add currencies</string>
     <string name="failed_to_refresh_rates">Failed to refresh rates</string>
     <string name="auto_refresh">Auto</string>
+    <string name="base_currency">Base Currency: %1$s</string>
+    <string name="exchange_rate_description">1 %1$s = %2$s %3$s</string>
     
     <!-- Add Asset Screen -->
     <string name="back">Back</string>
