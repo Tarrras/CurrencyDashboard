@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">CurrencyDashboard</string>
+    
+    <!-- Common -->
+    <string name="never">Never</string>
+    
+    <!-- Home Screen -->
+    <string name="exchange_rates">Exchange Rates</string>
+    <string name="last_updated">Last updated: %1$s</string>
+    <string name="refresh">Refresh</string>
+    <string name="add_asset">Add Asset</string>
+    <string name="no_currencies_added">No currencies added yet</string>
+    <string name="tap_to_add_currencies">Tap the + button to add currencies</string>
+    <string name="failed_to_refresh_rates">Failed to refresh rates</string>
+    
+    <!-- Add Asset Screen -->
+    <string name="back">Back</string>
+    <string name="search_assets">Search assets</string>
+    <string name="clear">Clear</string>
+    <string name="no_assets_available">No assets available</string>
+    <string name="no_assets_found_for">No assets found for \'%1$s\'</string>
+    <string name="failed_to_update_asset">Failed to update asset</string>
+    <string name="failed_to_load_assets">Failed to load assets</string>
+    
+    <!-- Formatter Utils -->
+    <string name="no_value">—</string>
+    <string name="positive_change_format">+%.2f%%</string>
+    <string name="negative_change_format">%.2f%%</string>
+    <string name="zero_change">0.00%</string>
+    
+    <!-- Error Messages -->
+    <string name="api_call_not_successful">API call was not successful</string>
+    <string name="rate_not_found">Rate not found for %1$s</string>
+</resources>

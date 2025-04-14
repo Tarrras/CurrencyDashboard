@@ -1,0 +1,8 @@
+# API Configuration Sample
+# Copy this file to api.properties and replace with your actual values
+
+# Exchange Rate API key
+API_KEY=your_api_key_here
+
+# Base URL for API requests
+BASE_URL=https://api.exchangerate.host/ 
