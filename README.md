@@ -19,38 +19,11 @@ view up-to-date information.
 ![Home Screen](screenshots/home_screen.png)
 
 The home screen displays the current exchange rates with USD as the base currency. Each card shows
-the exchange rate (e.g., 1 USD = 0.85 EUR) and auto-refreshes every 3 seconds using Kotlin Flow:
-
-```kotlin
-// Auto-refresh flow implementation in HomeViewModel
-private val autoRefreshFlow = flow {
-    while (currentCoroutineContext().isActive) {
-        emit(Unit)
-        delay(refreshInterval)
-    }
-}.onEach {
-    refreshRates()
-}.launchIn(viewModelScope)
-```
+the exchange rate (e.g., 1 USD = 0.85 EUR) and auto-refreshes every 3 seconds.
 
 ### Add Currency Screen
 
 ![Add Currency Screen](screenshots/add_currency_screen.png)
-
-The add currency screen allows users to search and add new currencies to their watchlist:
-
-```kotlin
-// Search implementation with debounce
-state
-    .map { it.searchQuery }
-    .debounce(300)
-    .distinctUntilChanged()
-    .onEach { query: String ->
-        _state.update { it.copy(isLoading = true) }
-        loadAssetsWithQuery(query)
-    }
-    .launchIn(viewModelScope)
-```
 
 ## API Used
 
