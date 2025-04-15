@@ -71,7 +71,7 @@ rates and available currencies. The API provides:
    BASE_URL=https://api.exchangerate.host/
    ```
 
-Note: The `api.properties` file is excluded from version control to keep API credentials secure.
+Note: The `api.properties` file is included to version control to simplify UX test.
 
 ## Setup Instructions
 
@@ -83,7 +83,7 @@ Note: The `api.properties` file is excluded from version control to keep API cre
 ### Build and Run
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/CurrencyDashboard.git
+   git clone https://github.com/Tarrras/CurrencyDashboard.git
    ```
 
 2. Set up API credentials:

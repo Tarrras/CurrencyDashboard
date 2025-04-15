@@ -13,7 +13,4 @@
 .externalNativeBuild
 .cxx
 local.properties
-
-# API Keys and sensitive data
-api.properties
 /app/release
